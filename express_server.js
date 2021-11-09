@@ -18,6 +18,10 @@ app.post("/urls", (req, res) => {
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
   console.log(urlDatabase);
 });
+app.post("/urls/:shortURL/delete", (req, res) => {
+  let shorturl = req.params.shortURL;  delete urlDatabase[shorturl];
+  res.redirect("/urls");
+})
 app.get("/u/:shortURL", (req, res) => {
   // const longURL = ...
   let shorturl = req.params.shortURL;
