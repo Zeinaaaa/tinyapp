@@ -4,18 +4,26 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-function generateRandomString() {
-
-};
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
-});
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
-
+function generateRandomString() {
+  return Math.random().toString(36).slice(7)};
+app.post("/urls", (req, res) => {
+  console.log(req.body);  
+  let longURL = req.body.longURL;
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURL;
+  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  console.log(urlDatabase);
+});
+app.get("/u/:shortURL", (req, res) => {
+  // const longURL = ...
+  let shorturl = req.params.shortURL;
+  const longURL = urlDatabase[shorturl];
+  res.redirect(longURL);
+});
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
