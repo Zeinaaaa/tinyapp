@@ -14,6 +14,11 @@
     </div>
         <%if( username ) { %>
          <a>logged In As: <%=username%></a>
+         <form method="POST" action="/urls/logout">
+          <button class="btn btn-outline-light">
+            log out
+          </button>
+         </form>
       <% }else{ %> 
         <form method="POST" action="/urls/login">
           <div style="width: 30em;">

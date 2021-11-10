@@ -8,10 +8,15 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 const urlDatabase = {
   "9sm5xK": "http://www.google.com",
-  "b2xVn2": "http://www.lighthouselabs.ca"
+  "b2xVn2": "http://www.lighthouselabs.ca",
+  "9sm5xK": "http://www.google.com",
 };
 function generateRandomString() {
   return Math.random().toString(36).slice(7)};
+app.post("/urls/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/urls");
+});
 app.post("/urls", (req, res) => {
   console.log(req.body);  
   let longURL = req.body.longURL;
@@ -60,6 +65,8 @@ app.get("/hello", (req, res) => {
 })
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase, username: req.cookies.username };
+  if(req.cookies.username) {
+    templateVars.username = req.cookies.username;}
   res.render("urls_index", templateVars);
 });
 app.get("/urls/new", (req, res) => {
