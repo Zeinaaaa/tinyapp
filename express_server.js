@@ -25,8 +25,25 @@ const users = {
     password: "dishwasher-funk"
   }
 };
+const matchEmail = (email) => {
+  for (let user in users) {
+    if(users[user].email===email) {
+      return true;
+    }
+  }
+  return null;
+}
+
+  
 app.post("/urls/register", (req, res) => {
   let userId = generateRandomString();
+  if (req.body.email.length === 0 || req.body.password.length === 0) {
+    res.status(400).send("you must provide your email address and password")
+    ;
+  } else if (matchEmail(req.body.email) ) {
+    res.status(400).send("you are already registered");
+    console.log("the req email: ",req.body.email)
+  } else {
   users[userId] = {
     id: userId,
     email: req.body.email,
@@ -35,6 +52,7 @@ app.post("/urls/register", (req, res) => {
   res.cookie("user_id", userId)
   console.log(users);
   res.redirect("/urls");
+  }
 })
 app.post("/urls/logout", (req, res) => {
   res.clearCookie("username");
