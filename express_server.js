@@ -61,12 +61,17 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 app.post("/urls", (req, res) => {
-  console.log(req.body);  
+  console.log(req.body); 
+  if (req.cookies.user_id) {
   let longURL = req.body.longURL;
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = longURL;
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
   console.log(urlDatabase);
+  } else {
+    res.send("Error: please login first");
+    res.redirect("/urls")
+  };
 });
 app.get("/urls/register", (req, res) => {
   console.log("getting register");
@@ -144,7 +149,11 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   const templateVars = {};
   templateVars.user_id = users[req.cookies.user_id];
-  res.render("urls_new", templateVars);
+  if (req.cookies.user_id) {
+    res.render("urls_new", templateVars);
+  } else{
+    res.redirect("/urls")
+  }
 });
 app.get("/urls/:shortURL", (req, res) => {
    let shortURL = req.params.shortURL;
