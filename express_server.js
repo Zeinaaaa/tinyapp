@@ -28,7 +28,7 @@ const users = {
 const matchEmail = (email) => {
   for (let user in users) {
     if(users[user].email===email) {
-      return true;
+      return users[user].id;
     }
   }
   return null;
@@ -54,6 +54,8 @@ app.post("/urls/register", (req, res) => {
   res.redirect("/urls");
   }
 })
+
+
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
   res.redirect("/urls");
@@ -68,7 +70,9 @@ app.post("/urls", (req, res) => {
 });
 app.get("/urls/register", (req, res) => {
   console.log("getting register");
-  res.render("register");
+  let templateVars = {};
+  templateVars.user_id = users[req.cookies.user_id];
+  res.render("register", templateVars);
   
 })
 app.post("/register", (req, res) => {
@@ -77,13 +81,26 @@ app.post("/register", (req, res) => {
 })
 app.get("/urls/login" , (req, res) => {
   console.log("getting logging")
-  res.render("login");
+  let templateVars = {};
+  templateVars.user_id = users[req.cookies.user_id];
+  res.render("login", templateVars);
 })
 app.post("/login", (req,res) => {
-  //req.body.username;
-  res.cookie("username", req.body.username);
   console.log("posting logging");
   res.redirect("/urls/login");
+})
+app.post("/urls/login", (req, res) => {
+  let userId = matchEmail(req.body.email);
+  if(matchEmail(req.body.email)) {
+    if (users[userId].password !== req.body.password) {
+      res.status(403).send("Your Password is wrong. Please try again!");
+    } else{
+      res.cookie("user_id", userId);
+      res.redirect("/urls")
+    };
+  } else {
+    res.status(403).send("Your email address can't be found");
+  }
 })
 app.post("/urls/:shortURL", (req, res) => {
   //req.body
