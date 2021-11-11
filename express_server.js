@@ -4,6 +4,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require("cookie-parser");
+const bcrypt = require('bcryptjs');
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
@@ -48,6 +49,17 @@ const users = {
     password: "dishwasher-funk"
   }
 };
+const hash = (users) => {
+  for (let user in users) {
+    users[user].password = bcrypt.hashSync(users[user].password, 10);
+  }
+  return users;
+}
+hash(users);
+
+
+
+
 const matchEmail = (email) => {
   for (let user in users) {
     if(users[user].email===email) {
@@ -65,12 +77,11 @@ app.post("/urls/register", (req, res) => {
     ;
   } else if (matchEmail(req.body.email) ) {
     res.status(400).send("you are already registered");
-    console.log("the req email: ",req.body.email)
   } else {
   users[userId] = {
     id: userId,
     email: req.body.email,
-    password: req.body.password
+    password: bcrypt.hashSync(req.body.password, 10) 
   }
   res.cookie("user_id", userId)
   console.log(users);
@@ -122,7 +133,7 @@ app.post("/login", (req,res) => {
 app.post("/urls/login", (req, res) => {
   let userId = matchEmail(req.body.email);
   if(matchEmail(req.body.email)) {
-    if (users[userId].password !== req.body.password) {
+    if (!bcrypt.compareSync(req.body.password, users[userId].password)) /*(users[userId].password !== req.body.password)*/{
       res.status(403).send("Your Password is wrong. Please try again!");
     } else{
       res.cookie("user_id", userId);
