@@ -12,27 +12,25 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-        <%if( user_id ) { %>
+        <%if( user_id !== undefined) { %>
          <a>logged In As: <%=user_id.email%></a>
-         <form method="POST" action="/urls/logout">
+         <form method="POST" action="/logout">
           <button class="btn btn-outline-light">
             log out
           </button>
          </form>
       <% }else{ %> 
-        <form method="POST" action="/urls/login">
+        <form method="POST" action="/login">
           <div style="width: 30em;">
             <div class="form-group">
-            <input
-              style="width: 200px"
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Please enter your name.">
-           
-            <input type="submit" class="btn btn-outline-light" value="login" />
-       <% }%> 
-        </form>
+            <button class="btn btn-outline-light">login</button> 
+            </form>
+        <form method="POST" action="/register">
+            <button class="btn btn-outline-light">register</button> 
+            </div>
+            </div>
+          </form>
+      <% }%> 
       </div>
     </div>
   </nav>

@@ -54,8 +54,8 @@ app.post("/urls/register", (req, res) => {
   res.redirect("/urls");
   }
 })
-app.post("/urls/logout", (req, res) => {
-  res.clearCookie("username");
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 app.post("/urls", (req, res) => {
@@ -67,12 +67,23 @@ app.post("/urls", (req, res) => {
   console.log(urlDatabase);
 });
 app.get("/urls/register", (req, res) => {
-  res.render("register.ejs");
+  console.log("getting register");
+  res.render("register");
+  
 })
-app.post("/urls/login", (req,res) => {
+app.post("/register", (req, res) => {
+  console.log("registration")
+  res.redirect("/urls/register");
+})
+app.get("/urls/login" , (req, res) => {
+  console.log("getting logging")
+  res.render("login");
+})
+app.post("/login", (req,res) => {
   //req.body.username;
   res.cookie("username", req.body.username);
-  res.redirect("/urls");
+  console.log("posting logging");
+  res.redirect("/urls/login");
 })
 app.post("/urls/:shortURL", (req, res) => {
   //req.body
@@ -107,21 +118,22 @@ app.get("/hello", (req, res) => {
 })
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase,  };
-  if(req.cookies.user_id) {
-    templateVars["user_id"] = users[req.cookies.user_id];}
+  // if(req.cookies.user_id) {
+    templateVars["user_id"] = users[req.cookies.user_id];
+  // }
+    console.log(templateVars);
   res.render("urls_index", templateVars);
 });
 app.get("/urls/new", (req, res) => {
   const templateVars = {};
-  if(req.cookies.user_id) {
-    templateVars.user_id = users[req.cookies.user_id];}
+  templateVars.user_id = users[req.cookies.user_id];
   res.render("urls_new", templateVars);
 });
 app.get("/urls/:shortURL", (req, res) => {
    let shortURL = req.params.shortURL;
   const templateVars = {shorturl: shortURL, longURL: urlDatabase[shortURL]}
-  if(req.cookies.user_id) {
-    templateVars["user_id"] = users[req.cookies.user_id];}
+  
+    templateVars["user_id"] = users[req.cookies.user_id];
   res.render("urls_show", templateVars);
 });
 
