@@ -147,11 +147,16 @@ app.post("/urls/login", (req, res) => {
   }
 })
 
-
+//used if statement to give only the owner the ability to edit the urls
 app.post("/urls/:shortURL", (req, res) => {
   let shorturl = req.params.shortURL; 
+  if (req.session.user_id === urlDatabase[shorturl].userID) {
   urlDatabase[shorturl].longURL = req.body.newURL;
   res.redirect("/urls/");
+  } else {
+    let templateVars = {"user_id": req.session.user_id};
+    res.render("notYours", templateVars);
+  }
 });
 
 
