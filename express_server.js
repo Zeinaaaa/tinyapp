@@ -107,12 +107,15 @@ app.post("/urls", (req, res) => {
   };
 });
 
-
+//while not logged in navigates to the register form. but if logged in navigate to /urls
 app.get("/urls/register", (req, res) => {
   let templateVars = {};
-  templateVars.user_id = users[req.session.user_id];
-  res.render("register", templateVars);
-  
+    if (!req.session.user_id) {
+    templateVars.user_id = users[req.session.user_id];
+    res.render("register", templateVars);
+  } else {
+    res.redirect("/urls");
+  }
 })
 
 
