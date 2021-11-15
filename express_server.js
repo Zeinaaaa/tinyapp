@@ -1,11 +1,11 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
-const {getUserByEmail} = require("./helpers.js")
+const {urlDatabase, users,generateRandomString, getUserByEmail, urlsForUser} = require("./helpers.js")
 const bodyParser = require("body-parser");
 const bcrypt = require('bcryptjs');
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080; 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(
@@ -17,47 +17,6 @@ app.use(
 app.set("view engine", "ejs");
 
 
-const generateRandomString = () => {
-  return Math.random().toString(36).slice(7)};
-
-const urlDatabase = {
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userID: "aJ48lW"
-  },
-  "b2xVn2": {
-    longURL: "http://www.google.com",
-    userID: "thg2349"
-  },
-  "jhfgkj": {
-    longURL: "http://www.reddit.com",
-    userID: "aJ48lW"
-  },
-};
-
-function urlsForUser(id) {
-  userDatabase = {};
-  for (let user in urlDatabase) {
-    if (urlDatabase[user].userID === id) {
-      userDatabase[user] = urlDatabase[user];
-    }
-  }
-  return userDatabase;
-}
-
-
-const users = { 
-  "aJ48lW": {
-    id: "aJ48lW", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
-    password: "dishwasher-funk"
-  }
-};
 const hash = (users) => {
   for (let user in users) {
     users[user].password = bcrypt.hashSync(users[user].password, 10);
