@@ -193,9 +193,13 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
-
+//redirect to /urls if logged in or to /login if the user is not logged in
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    res.redirect("/urls/login");
+  }
 });
 
 
