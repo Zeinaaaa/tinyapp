@@ -164,15 +164,15 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     res.render("notYours", templateVars);
   }
 });
-app.post("/urls/:shortURL/edit", (req, res) => {
-  let shorturl = req.params.shortURL;
-  if (req.session.user_id === urlDatabase[shorturl].userID) {
-    res.redirect(`/urls/${shorturl}`);
-  } else {
-    let templateVars = {"user_id": req.session.user_id};
-    res.render("notYours", templateVars)
-  }
-});
+// app.get("/urls/:shortURL", (req, res) => {
+//   let shorturl = req.params.shortURL;
+//   if (req.session.user_id === urlDatabase[shorturl].userID) {
+//     res.redirect(`/urls/${shorturl}`);
+//   } else {
+//     let templateVars = {"user_id": req.session.user_id};
+//     res.render("notYours", templateVars)
+//   }
+// });
 
 
 app.get("/u/:shortURL", (req, res) => {
