@@ -91,7 +91,7 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
-
+//modified the successful post to redirect to /urls/:shortURL as requested
 app.post("/urls", (req, res) => { 
   if (req.session.user_id) {
     let longURL = req.body.longURL;
@@ -99,7 +99,8 @@ app.post("/urls", (req, res) => {
     urlDatabase[shortURL] = {};
     urlDatabase[shortURL].longURL = longURL;
     urlDatabase[shortURL].userID = req.session.user_id;
-    res.send("URL added. <a href= '/urls'> Go to main page </a>");         
+    //res.send("URL added. <a href= '/urls'> Go to main page </a>"); 
+    res.redirect(`/urls/${shortURL}`)        
   } else {
     res.send("Error: please login first");
     res.redirect("/urls")
@@ -220,7 +221,7 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
-
+//the edit button on the main page will now use this get.
 app.get("/urls/:shortURL", (req, res) => {
   let shorturl = req.params.shortURL;
   if (!urlDatabase[shorturl]) {
