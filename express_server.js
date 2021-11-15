@@ -120,11 +120,15 @@ app.post("/register", (req, res) => {
   res.redirect("/urls/register");
 })
 
-
+//while not logged in navigates to the login form. but if logged in navigate to /urls
 app.get("/urls/login" , (req, res) => {
   let templateVars = {};
-  templateVars.user_id = users[req.session.user_id];
-  res.render("login", templateVars);
+  if (!req.session.user_id) {
+    templateVars.user_id = users[req.session.user_id];
+    res.render("login", templateVars);
+  } else {
+    res.redirect("/urls");
+}
 })
 
 
@@ -170,16 +174,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     res.render("notYours", templateVars);
   }
 });
-// app.get("/urls/:shortURL", (req, res) => {
-//   let shorturl = req.params.shortURL;
-//   if (req.session.user_id === urlDatabase[shorturl].userID) {
-//     res.redirect(`/urls/${shorturl}`);
-//   } else {
-//     let templateVars = {"user_id": req.session.user_id};
-//     res.render("notYours", templateVars)
-//   }
-// });
-
 
 app.get("/u/:shortURL", (req, res) => {
   let shorturl = req.params.shortURL;
