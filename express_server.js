@@ -209,14 +209,14 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-
+//if the user is not logged in he will be directed to the login page.
 app.get("/urls/new", (req, res) => {
   const templateVars = {};
   templateVars.user_id = users[req.session.user_id];
   if (req.session.user_id) {
     res.render("urls_new", templateVars);
   } else{
-    res.redirect("/urls");
+    res.redirect("/urls/login");
   }
 });
 
